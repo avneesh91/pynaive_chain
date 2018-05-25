@@ -77,6 +77,7 @@ class CommandProcessor(object):
         self.write_to_peers([i.get('peer') for i in peer_list], json.dumps(intro_dict))
 
         for block in data_list:
+            block['data'] = json.loads(block.get('data'))
             self.chain_instance.block_data.append(Block(**block))
 
     def data_upload(self, new_peer):

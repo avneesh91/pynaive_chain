@@ -44,6 +44,26 @@ class BlockChain(object):
         else:
             self.configure_genesis()
 
+    def validate_blockchain(self):
+        import hashlib
+        for i in range(len(self.block_data)):
+            hasher = hashlib.sha256()
+
+            if i == 0:
+                # genesis block, continue as
+                # is
+                continue
+            prev_hash = self.block_data[i-1].curr_hash
+            current_block = self.block_data[i].data
+            hasher.update(prev_hash.encode() + current_block.encode())
+            current_hash = hasher.hexdigest()
+
+            if current_hash != self.block_data[i].curr_hash:
+                return False
+
+        return True
+
+
     def join_existing_peer_on_startup(self,peer_id, host, port):
         """
         Send intialization request for data upload and
