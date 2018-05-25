@@ -1,0 +1,5 @@
+*.swo
+*.swn
+*.swp
+venv/
+__pycache__/
