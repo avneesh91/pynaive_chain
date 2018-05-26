@@ -2,7 +2,10 @@ import json
 import asyncio
 import websocket
 
+from utils import get_logger
 from block_data import Block
+
+protocol_logger = get_logger('PROTOCOL_PROCESSOR')
 
 class CommandProcessor(object):
     """
@@ -15,6 +18,7 @@ class CommandProcessor(object):
         """
         Init function for command processor
         """
+        protocol_logger('Intializing protocol processor')
         self.chain_instance = chain_instance
 
     def command_processor(self, command_dict):
@@ -31,28 +35,44 @@ class CommandProcessor(object):
             peer_id = command_dict.get('peer_id')
             peer_host = command_dict.get('peer_host')
             port = command_dict.get('peer_port')
+            protocol_logger('NEW_PEER_JOIN recieved from {} at {}:{}'.format(peer_id, peer_host, port))
 
+            protocol_logger('Adding new peer with id {} at {}:{}'.format(peer_id, peer_host, port))
             self.add_new_peer(peer_id, peer_host, port)
+
+            protocol_logger('Peer added successfully. Initiating upload node data to remote peer')
             self.data_upload(peer_id)
 
         elif current_command == 'NEW_JOIN_DATA_UPLOAD':
+            protocol_logger('NEW_PEER_JOIN_DATA_UPLOAD recieved')
+
             self.handle_data_upload(command_dict.get('peer_list'), command_dict.get('data_list'))
 
         elif current_command == 'ADD_PEER':
+
             peer_id = command_dict.get('peer_id')
             peer_host = command_dict.get('peer_host')
             port = command_dict.get('peer_port')
+            protocol_logger('ADD_PEER recieved')
+
             self.add_new_peer(peer_id, peer_host, port)
+            protocol_logger('New peer {} at {}:{} added to peer list successfully'.format(peer_id, peer_host, port))
 
         elif current_command == 'VALIDATE_BLOCK':
+            protocol_logger('VALIDATE_BLOCK recieved')
             block_data = command_dict.get('block_data')
 
+            protocol_logger('Initiaiting block validation')
             if not self.chain_instance.validate_block(block_data):
+                protocol_logger('Block validation failed')
                 return 'KCA'
 
         elif current_command == 'ADD_BLOCK':
+            protocol_logger('ADD_BLOCK recieved')
             block_data = command_dict.get('data')
+            protocol_logger('Adding data block')
             self.chain_instance.add_block(block_data)
+            protocol_logger('Block added successfully')
 
         return 'ACK'
 
@@ -64,6 +84,7 @@ class CommandProcessor(object):
             self.chain_instance.peer_connect_dict[peer_id] = {'host': peer_host, 'port': port}
 
     def handle_data_upload(self, peer_list, data_list):
+        protocol_logger('Saving data from remote peer')
         intro_dict = {
             'CMD': 'ADD_PEER',
             'peer_id': self.chain_instance.peer_id,
@@ -107,7 +128,6 @@ class CommandProcessor(object):
         """
         Function for writing data to peers
         """
-        print(peer_ids)
         result_list = []
         for peer in peer_ids:
             curr_peer = self.chain_instance.peer_connect_dict.get(peer)
@@ -118,7 +138,6 @@ class CommandProcessor(object):
                 conn.send(data)
                 response = conn.recv()
                 result_list.append(response)
-                print('Response {}'.format(response))
             except websocket.WebSocketTimeoutException:
                 self.chain_instance.peer_connect_dict.pop(peer)
 

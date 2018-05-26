@@ -1,21 +1,27 @@
 import asyncio
 import websockets
 
+from utils import get_logger
 from threading import Thread
+
+rpc_logger = get_logger('RPC_SERVER')
 
 class WebSocketServer(object):
     """
     class for running the websocket server for py_naive_chain
     """
     def __init__(self, port, chain_instance, *args, **kwargs):
+        rpc_logger('Intializing RPC server')
         self.host = '0.0.0.0'
         self.port = port
         self.chain_instance = chain_instance
         self.websocket_loop = asyncio.new_event_loop()
 
     def start_websocket(self):
+        rpc_logger('Starting RPC server on port {}:{}'.format(self.host, self.port))
         self.executor_thread = Thread(target=self.__start_websocket__, args=())
         self.executor_thread.start()
+        rpc_logger('RPC server waiting for connections')
 
     def __start_websocket__(self):
         execution_loop =asyncio.new_event_loop()

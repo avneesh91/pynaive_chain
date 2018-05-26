@@ -3,11 +3,15 @@ import json
 import datetime
 
 from block_data import Block
+from utils import get_logger
 
 from concurrent.futures import ThreadPoolExecutor
 from websocket_server import WebSocketServer
 from command_processor import CommandProcessor
+from http_server import NaiveChainHTTPServer
 
+
+bc_logger = get_logger('BLOCKCHAIN')
 
 class BlockChain(object):
     """
@@ -20,12 +24,18 @@ class BlockChain(object):
         Initializes the BlockChain as well as the HTTP
         server for interacting with the blockchain
         """
+        bc_logger( 'Setting up naive chain server')
         self.peer_id = str(uuid.uuid4())
         self.age = datetime.datetime.now()
         self.websocket_port = websocket_port
 
+
+        bc_logger( 'Intializing websocket RPC')
         self.initialize_blockhain_rpc()
-        self.intialize_http_server()
+
+        bc_logger( 'Intializing websocket RPC')
+
+        bc_logger( 'Intializing protocol processing')
         self.protocol_processor = CommandProcessor(self)
 
         self.peer_list = []
@@ -37,12 +47,19 @@ class BlockChain(object):
         self.rpc_server.start_websocket()
 
         if kwargs.get('existing_peer'):
+            bc_logger( 'Peer Discovered')
             epeer_id = kwargs.get('peer_id')
             epeer_host = kwargs.get('peer_host')
             epeer_port = kwargs.get('peer_port')
             self.join_existing_peer_on_startup(epeer_id, epeer_host, epeer_port)
         else:
+            bc_logger( 'No Peer Specified. Intializing genesis block for standalone operation')
             self.configure_genesis()
+
+        # will block on this
+        #self.intialize_http_server()
+
+        #self.http_server.start_server()
 
     def validate_blockchain(self):
         import hashlib
@@ -69,6 +86,7 @@ class BlockChain(object):
         Send intialization request for data upload and
         connecting to other peers
         """
+        bc_logger( 'Joining remote peer')
         self.protocol_processor.add_new_peer(peer_id, host, port)
 
         command_dict = {}
@@ -76,6 +94,8 @@ class BlockChain(object):
         command_dict['peer_id'] = self.peer_id
         command_dict['peer_host'] = '0.0.0.0'
         command_dict['peer_port'] = self.websocket_port
+
+        bc_logger( 'Intializing data sync peer')
         self.protocol_processor.write_to_peers([peer_id], json.dumps(command_dict))
 
     def configure_genesis(self):
@@ -113,7 +133,8 @@ class BlockChain(object):
         Initialize the HTTP server for handling incoming
         requests from the user
         """
-        pass
+        self.http_server = NaiveChainHTTPServer(self, '0.0.0.0', self.websocket_port +1)
+
 
     def initialize_blockhain_rpc(self):
         """
