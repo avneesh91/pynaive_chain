@@ -58,9 +58,8 @@ class BlockChain(object):
             self.configure_genesis()
 
         # will block on this
-        #self.intialize_http_server()
-
-        #self.http_server.start_server()
+        self.intialize_http_server()
+        self.http_server.start_server()
 
     def validate_blockchain(self):
         import hashlib
