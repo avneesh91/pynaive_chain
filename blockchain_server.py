@@ -45,6 +45,7 @@ class BlockChain(object):
 
         # will run this in the background as a future that never returns!!
         self.rpc_server.start_websocket()
+        bc_logger('Node {} live on {}:{}'.format(self.peer_id, '0.0.0.0', self.websocket_port))
 
         if kwargs.get('existing_peer'):
             bc_logger( 'Peer Discovered')
