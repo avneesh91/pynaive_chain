@@ -118,13 +118,19 @@ class BlockChain(object):
         return last_block
 
     def validate_block(self, block_data):
-        recieved_block = Block(**block_data)
+        block_data['data'] = json.loads(block_data.get('data'))
         latest_block = self.block_data[-1]
         compiled_block_data = Block(latest_block.index+ 1, latest_block.curr_hash, block_data.get('data'))
-        return recieved_block == compiled_block_data
+        return block_data.get('curr_hash') == compiled_block_data.curr_hash
 
     def add_data(self, data):
         block = self.create_sample_block_data(data)
+        consensus_result = self.protocol_processor.get_peer_agreement(({'CMD': 'VALIDATE_BLOCK', 'block_data': block.serialize()}))
+
+        if not consensus_result:
+            return False
+
+        self.add_block(data)
         self.protocol_processor.write_to_peers(self.peer_connect_dict.keys(), json.dumps({'CMD': 'ADD_BLOCK', 'data': data}))
         return self.protocol_processor.get_peer_agreement(block.serialize())
 

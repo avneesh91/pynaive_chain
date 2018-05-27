@@ -143,17 +143,15 @@ class CommandProcessor(object):
 
         return result_list
 
-    def get_peer_agreement(self, block):
+    def get_peer_agreement(self, data):
         """
         Rudamentory consesous
         """
         peers = self.chain_instance.peer_connect_dict
         total_count = len(peers)
 
-        result_list = self.write_to_peers(peers.keys(), json.dumps({'block_data':block}))
+        result_list = self.write_to_peers(peers.keys(), json.dumps(data))
         if not result_list.count('ACK') > total_count/2:
             # motion not carried
             return False
-
-        self.chain_instance.add_block(json.loads(block.get('data')))
         return True

@@ -55,8 +55,25 @@ class Data(Resource):
         all_data = [ i.serialize() for i in current_bc.block_data]
         return {'status': 'OK', 'data': all_data}, 200
 
+class Node(Resource):
+
+    def post(self):
+        return {'status': 'OK', 'data': {}}, 200
+
+    def get(self):
+        current_bc = app.config.get('chain_instance')
+        node_info = {}
+        node_info['peer_id'] = current_bc.peer_id
+        node_info['data_count'] = len(current_bc.block_data)
+        node_info['health'] = current_bc.validate_blockchain()
+        node_info['rpc_port'] = current_bc.websocket_port
+        node_info['age'] = str(current_bc.age)
+
+        return {'status': 'OK', 'data': node_info}, 200
+
 
 
 
 api.add_resource(Peers, '/peers')
 api.add_resource(Data, '/data')
+api.add_resource(Node, '/node')
