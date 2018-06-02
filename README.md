@@ -146,7 +146,7 @@ Response:
 
 Request:
 ```
-curl -X GET http://127.0.0.1:15002/data  -H 'Cache-Control: no-cache'
+curl -X GET http://127.0.0.1:15002/data
 ```
 Response:
 ```
@@ -172,7 +172,7 @@ Response:
 ##### Node Info
 Request:
 ```
-curl -X GET http://127.0.0.1:15002/node -H 'Cache-Control: no-cache'
+curl -X GET http://127.0.0.1:15002/node
 ```
 
 Response:
@@ -185,6 +185,25 @@ Response:
       "health":true,
       "rpc_port":"15001",
       "age":"2018-06-02 12:42:13.860551"
+   }
+}
+```
+
+##### Get Peers
+Request:
+```
+curl -X GET http://127.0.0.1:15002/peers
+```
+
+Response:
+```
+{
+   "status":"OK",
+   "data":{
+      "01cfb470-65a3-4267-a33c-28be309b5887":{
+         "host":"0.0.0.0",
+         "port":"9803"
+      }
    }
 }
 ```
