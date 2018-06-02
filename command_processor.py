@@ -1,6 +1,7 @@
 import json
 import asyncio
-import websocket
+import websockets
+import websocket as websocket_client
 
 from utils import get_logger
 from block_data import Block
@@ -134,11 +135,11 @@ class CommandProcessor(object):
             peer_host = curr_peer.get('host')
             port = curr_peer.get('port')
             try:
-                conn = websocket.create_connection("ws://{}:{}".format(peer_host, port), timeout=10)
+                conn = websocket_client.create_connection("ws://{}:{}".format(peer_host, port), timeout=10)
                 conn.send(data)
                 response = conn.recv()
                 result_list.append(response)
-            except websocket.WebSocketTimeoutException:
+            except websocket_client.WebSocketTimeoutException:
                 self.chain_instance.peer_connect_dict.pop(peer)
 
         return result_list

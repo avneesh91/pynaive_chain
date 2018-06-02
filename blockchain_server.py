@@ -139,7 +139,7 @@ class BlockChain(object):
         Initialize the HTTP server for handling incoming
         requests from the user
         """
-        self.http_server = NaiveChainHTTPServer(self, '0.0.0.0', self.websocket_port +1)
+        self.http_server = NaiveChainHTTPServer(self, '0.0.0.0', int(self.websocket_port) +1)
 
 
     def initialize_blockhain_rpc(self):
