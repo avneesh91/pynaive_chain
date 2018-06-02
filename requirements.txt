@@ -23,5 +23,6 @@ simplegeneric==0.8.1
 six==1.11.0
 traitlets==4.3.2
 wcwidth==0.1.7
+websocket-client==0.48.0
 websockets==5.0
 Werkzeug==0.14.1
