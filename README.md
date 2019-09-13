@@ -1,5 +1,5 @@
 # PyNaive Chain
-This is the source code for a toy block chain introduced [here](https://technokeeda.com/programming/python-blockchain-implementation-toy/)
+This is the source code for a toy block chain introduced <a href="https://technokeeda.com/programming/python-blockchain-implementation-toy/" target="_blank">[here]</a>
 
 PyNaiveChain is a toy blockchain implemented completly in python. It has the following features as of now
    - Peer discovery of a loosely implemented gossip protocol
