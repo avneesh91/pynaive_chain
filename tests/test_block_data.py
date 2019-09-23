@@ -1,7 +1,11 @@
+import sys, os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../')
+
 import json
 import hashlib
 import unittest
-from .block_data import Block
+from block_data import Block
 
 class TestBlock(unittest.TestCase):
     """
