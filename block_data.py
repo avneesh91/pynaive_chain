@@ -25,7 +25,7 @@ class Block(object):
         self.data = json.dumps(data)
 
         # hash of the block
-        self.curr_hash = self.get_current_hash()
+        self.curr_hash = self.__get_current_hash__()
 
     def serialize(self, json_dump=False):
         """
@@ -43,7 +43,7 @@ class Block(object):
 
         return block_repr
 
-    def get_current_hash(self):
+    def __get_current_hash__(self):
         """
         Class function for getting hash of the current hash
         """

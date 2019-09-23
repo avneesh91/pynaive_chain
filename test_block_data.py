@@ -1,4 +1,5 @@
 import json
+import hashlib
 import unittest
 from .block_data import Block
 
@@ -9,6 +10,9 @@ class TestBlock(unittest.TestCase):
 
     def setUp(self):
         self.Blockdata = Block(0, "random_testing_data", "initial_hash")
+
+    def get_block_for_data(self, data, initial_hash):
+        return Block(0,initial_hash, data)
 
     def test__give_block_data__when_str_invoked__then_return_block_representation(self):
         actual_output = self.Blockdata.__str__()
@@ -46,3 +50,14 @@ class TestBlock(unittest.TestCase):
         self.assertEqual(actual_output, expected_output)
         self.assertIsInstance(actual_output, str)
 
+    def test__given_block_data__when_serialize_invoked_json_dumps_as_false__then_return_sha256_of_data_in_hash(self):
+        curr_block = self.get_block_for_data("test_data", "initial_hash")
+
+        serialized_block = curr_block.serialize()
+        actual_output = serialized_block["curr_hash"]
+
+        hasher = hashlib.sha256()
+        hasher.update("initial_hash".encode() + json.dumps("test_data").encode())
+        expected_output = hasher.hexdigest()
+
+        self.assertEqual(actual_output, expected_output)
