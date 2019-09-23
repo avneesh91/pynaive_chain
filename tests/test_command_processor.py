@@ -15,8 +15,6 @@ class TestCommandProcessor(unittest.TestCase):
         actual_output = command_processor.command_processor({'CMD': 'PING'})
         expected_output = {'CMD': 'PONG'}
 
-        print(actual_output)
-
         self.assertEqual(expected_output, actual_output)
         self.assertIsInstance(actual_output, dict)
 
