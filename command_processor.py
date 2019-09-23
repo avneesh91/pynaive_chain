@@ -81,8 +81,8 @@ class CommandProcessor(object):
         """
         Add a new pair to the network
         """
-        if peer_id not in self.chain_instance.peer_connect_dict:
-            self.chain_instance.peer_connect_dict[peer_id] = {'host': peer_host, 'port': port}
+        protocol_logger('Invoking the block chain function for adding new peer')
+        self.chain_instance.add_new_peer(peer_id, {'host': peer_host, 'port': port})
 
     def handle_data_upload(self, peer_list, data_list):
         protocol_logger('Saving data from remote peer')

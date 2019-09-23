@@ -39,7 +39,7 @@ class BlockChain(object):
         self.protocol_processor = CommandProcessor(self)
 
         self.peer_list = []
-        self.peer_connect_dict = {}
+        self.__peer_connect_dict__ = {}
 
         self.block_data = []# replace with a thread safe implementation
 
@@ -60,6 +60,16 @@ class BlockChain(object):
         # will block on this
         self.intialize_http_server()
         self.http_server.start_server()
+
+    def add_new_peer(self, peer_id, peer_dict):
+        """
+        Add a new peer to this peer
+        """
+        bc_logger('Event for adding new peer received')
+        bc_logger('Checking if already connected to peer')
+        if peer_id not in self.__peer_connect_dict__.keys():
+            bc_logger('New peer encountered. Adding to peer connection dict')
+            self.__peer_connect_dict__[peer_id] = peer_dict
 
     def validate_blockchain(self):
         import hashlib
@@ -131,7 +141,7 @@ class BlockChain(object):
             return False
 
         self.add_block(data)
-        self.protocol_processor.write_to_peers(self.peer_connect_dict.keys(), json.dumps({'CMD': 'ADD_BLOCK', 'data': data}))
+        self.protocol_processor.write_to_peers(self.__peer_connect_dict__.keys(), json.dumps({'CMD': 'ADD_BLOCK', 'data': data}))
         return self.protocol_processor.get_peer_agreement(block.serialize())
 
     def intialize_http_server(self):
