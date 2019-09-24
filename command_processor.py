@@ -127,7 +127,7 @@ class CommandProcessor(object):
           'port': curr_peer.get('port')
       })
 
-    data_list = [i.serialize() for i in self.chain_instance.block_data]
+    data_list = [i.serialize() for i in self.chain_instance.get_block_data()]
 
     data_dict = {
         "CMD": "NEW_JOIN_DATA_UPLOAD",

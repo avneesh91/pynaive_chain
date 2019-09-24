@@ -41,7 +41,7 @@ class BlockChain(object):
     self.peer_list = []
     self.__peer_connect_dict__ = {}
 
-    self.block_data = []    # replace with a thread safe implementation
+    self.__block_data__ = []    # replace with a thread safe implementation
 
     # will run this in the background as a future that never returns!!
     self.rpc_server.start_websocket()
@@ -63,6 +63,12 @@ class BlockChain(object):
     # will block on this
     self.intialize_http_server()
     self.http_server.start_server()
+
+  def get_block_data(self):
+      return self.__block_data__
+
+  def add_block_data(self, block_data):
+      self.__block_data__.append(block_data)
 
   def get_peer_id_list(self):
       return self.__peer_connect_dict__.keys()
@@ -88,19 +94,19 @@ class BlockChain(object):
 
   def validate_blockchain(self):
     import hashlib
-    for i in range(len(self.block_data)):
+    for i in range(len(self.__block_data__)):
       hasher = hashlib.sha256()
 
       if i == 0:
         # genesis block, continue as
         # is
         continue
-      prev_hash = self.block_data[i - 1].curr_hash
-      current_block = self.block_data[i].data
+      prev_hash = self.__block_data__[i - 1].curr_hash
+      current_block = self.__block_data__[i].data
       hasher.update(prev_hash.encode() + current_block.encode())
       current_hash = hasher.hexdigest()
 
-      if current_hash != self.block_data[i].curr_hash:
+      if current_hash != self.__block_data__[i].curr_hash:
         return False
 
     return True
@@ -127,22 +133,22 @@ class BlockChain(object):
         Class function for configuring gensis
         """
     genesis_block = Block(0, 'ioiiiuasyi891qbduquiuqwiqwiupwe', 'random')
-    self.block_data.append(genesis_block)
+    self.add_block_data(genesis_block)
 
   def create_sample_block_data(self, data):
-    latest_block = self.block_data[-1]
+    latest_block = self.__block_data__[-1]
     last_block = Block(latest_block.index + 1, latest_block.curr_hash, data)
     return last_block
 
   def add_block(self, data):
-    latest_block = self.block_data[-1]
+    latest_block = self.__block_data__[-1]
     last_block = Block(latest_block.index + 1, latest_block.curr_hash, data)
-    self.block_data.append(last_block)
+    self.add_block_data(last_block)
     return last_block
 
   def validate_block(self, block_data):
     block_data['data'] = json.loads(block_data.get('data'))
-    latest_block = self.block_data[-1]
+    latest_block = self.__block_data__[-1]
     compiled_block_data = Block(latest_block.index + 1, latest_block.curr_hash,
                                 block_data.get('data'))
     return block_data.get('curr_hash') == compiled_block_data.curr_hash
