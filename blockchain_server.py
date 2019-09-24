@@ -64,6 +64,18 @@ class BlockChain(object):
     self.intialize_http_server()
     self.http_server.start_server()
 
+  def get_peer_id_list(self):
+      return self.__peer_connect_dict__.keys()
+
+  def get_peer(self, peer_id):
+      return self.__peer_connect_dict__.get(peer_id)
+
+  def remove_peer(self, peer_id):
+      if peer_id in self.__peer_connect_dict__.keys():
+          return self._peer_connect_dict__.pop(peer_id)
+
+      return None
+
   def add_new_peer(self, peer_id, peer_dict):
     """
         Add a new peer to this peer

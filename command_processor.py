@@ -115,12 +115,12 @@ class CommandProcessor(object):
     data_list = []
 
     # send all the peers for the new peer to connect to
-    for peer in self.chain_instance.peer_connect_dict.keys():
+    for peer in self.chain_instance.get_peer_id_list():
 
       if peer == new_peer:
         continue
 
-      curr_peer = self.chain_instance.peer_connect_dict.get(peer)
+      curr_peer = self.chain_instance.get_peer(peer)
       peer_list.append({
           'peer': peer,
           'host': curr_peer.get('host'),
@@ -143,7 +143,7 @@ class CommandProcessor(object):
         """
     result_list = []
     for peer in peer_ids:
-      curr_peer = self.chain_instance.peer_connect_dict.get(peer)
+      curr_peer = self.chain_instance.get_peer(peer)
       peer_host = curr_peer.get('host')
       port = curr_peer.get('port')
       try:
@@ -153,7 +153,7 @@ class CommandProcessor(object):
         response = conn.recv()
         result_list.append(response)
       except websocket_client.WebSocketTimeoutException:
-        self.chain_instance.peer_connect_dict.pop(peer)
+        self.chain_instance.remove_peer(peer)
 
     return result_list
 
@@ -161,7 +161,7 @@ class CommandProcessor(object):
     """
         Rudamentory consesous
         """
-    peers = self.chain_instance.peer_connect_dict
+    peers = self.chain_instance.get_peer_id_list()
     total_count = len(peers)
 
     result_list = self.write_to_peers(peers.keys(), json.dumps(data))
