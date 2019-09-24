@@ -108,7 +108,7 @@ class CommandProcessor(object):
 
     for block in data_list:
       block['data'] = json.loads(block.get('data'))
-      self.chain_instance.block_data.append(Block(**block))
+      self.chain_instance.add_block(Block(**block))
 
   def data_upload(self, new_peer):
     peer_list = []
