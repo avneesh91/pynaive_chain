@@ -14,7 +14,7 @@ What it doesn't have at the moment:
    - Block Data persistence
    - Chain reparing
 
-Note: This only supports python 3.6.
+Note: This only supports python 3, it is not compatible with Python 2.
 
 ## Usage and quickstart
 
