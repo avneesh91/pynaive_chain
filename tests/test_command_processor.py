@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from unittest import mock
 from block_data import Block
 from command_processor import CommandProcessor
+import websocket as websocket_client
 
 
 class TestCommandProcessor(unittest.TestCase):
@@ -108,6 +109,30 @@ class TestCommandProcessor(unittest.TestCase):
     self.mock_chain_instance.get_block_data.assert_called_once()
     self.mock_websocket_instance.send.assert_called_once_with(json.dumps(TestCommandProcessor.UPLOAD_DICT))
 
+  @mock.patch('websocket.create_connection')
+  def test__given_command_processor__when_command_processor_invoked_with_new_peer_join_then_raise_websocket_exception__then_remove_added_from_block_chain(
+      self, mock_websocket):
 
-    # Check scenario when the send operation to the peer fails, then te peer should be removed from the
-    # block chain instance peer list
+    calls_for_get_peer = [mock.call('peer_id_1'), mock.call('peer_id_2'), mock.call('peer_id_3'), mock.call('SAMPLE_PEER_ID')]
+
+    calls_for_send_data_to_peer = [mock.call('peer_id_1'), mock.call('peer_id_2'), mock.call('peer_id_3'), mock.call('SAMPLE_PEER_ID')]
+
+    mock_websocket.return_value = self.mock_websocket_instance
+    mock_websocket.side_effect = websocket_client.WebSocketTimeoutException
+
+    command_processor = CommandProcessor(self.mock_chain_instance)
+    actual_output = command_processor.command_processor(
+        TestCommandProcessor.NEW_PEER_JOIN)
+    expected_output = 'ACK'
+
+    self.assertEqual(expected_output, actual_output)
+    self.mock_chain_instance.add_new_peer.assert_called_once_with(
+            'SAMPLE_PEER_ID', {
+                'host': '0.0.0.0',
+                'port': '1234'
+            }
+    )
+    self.mock_chain_instance.get_peer_id_list.assert_called_once()
+    self.mock_chain_instance.get_peer.assert_has_calls(calls_for_get_peer)
+    self.mock_chain_instance.get_block_data.assert_called_once()
+    self.mock_chain_instance.remove_peer.assert_called_once_with('SAMPLE_PEER_ID')
