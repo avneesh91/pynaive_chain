@@ -9,7 +9,8 @@ import websocket as websocket_client
 
 class TestCommandProcessor(unittest.TestCase):
   """
-    Class for testing the command_processor functionality
+    Class for testing all the commands that can be passed to
+    the command_processor
     """
   PING_COMMAND = {'CMD': 'PING'}
   ADD_PEER_COMMAND = {
@@ -25,7 +26,12 @@ class TestCommandProcessor(unittest.TestCase):
       'peer_port': '1234'
   }
 
-  VALIDATE_COMMAND_BLOCK = {'CMD': 'VALIDATE_BLOCK'}
+  VALIDATE_COMMAND_BLOCK = {
+      'CMD': 'VALIDATE_BLOCK',
+      'block_data': {
+          'data': 'Test Data'
+      }
+  }
 
   UPLOAD_DICT = {
       "CMD":
@@ -185,3 +191,17 @@ class TestCommandProcessor(unittest.TestCase):
     self.mock_chain_instance.get_block_data.assert_called_once()
     self.mock_chain_instance.remove_peer.assert_called_once_with(
         'SAMPLE_PEER_ID')
+
+  def test__given_command_processor__when_command_processor_invoked_with_validate_block_comand__then_validate_block(
+      self):
+
+    command_processor = CommandProcessor(self.mock_chain_instance)
+
+    actual_output = command_processor.command_processor(
+        TestCommandProcessor.VALIDATE_COMMAND_BLOCK)
+    expected_output = 'ACK'
+
+    self.assertEqual(expected_output, actual_output)
+
+    self.mock_chain_instance.validate_block.assert_called_once_with(
+        {'data': 'Test Data'})
