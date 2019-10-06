@@ -154,7 +154,7 @@ class BlockChain(object):
     block_data['data'] = json.loads(block_data.get('data'))
 
     if len(self.__block_data__) == 0:
-        return True
+      return True
 
     latest_block = self.__block_data__[-1]
     compiled_block_data = Block(latest_block.index + 1, latest_block.curr_hash,
