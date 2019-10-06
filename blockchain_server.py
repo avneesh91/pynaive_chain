@@ -65,22 +65,22 @@ class BlockChain(object):
     self.http_server.start_server()
 
   def get_block_data(self):
-      return self.__block_data__
+    return self.__block_data__
 
   def add_block_data(self, block_data):
-      self.__block_data__.append(block_data)
+    self.__block_data__.append(block_data)
 
   def get_peer_id_list(self):
-      return self.__peer_connect_dict__.keys()
+    return self.__peer_connect_dict__.keys()
 
   def get_peer(self, peer_id):
-      return self.__peer_connect_dict__.get(peer_id)
+    return self.__peer_connect_dict__.get(peer_id)
 
   def remove_peer(self, peer_id):
-      if peer_id in self.__peer_connect_dict__.keys():
-          return self._peer_connect_dict__.pop(peer_id)
+    if peer_id in self.__peer_connect_dict__.keys():
+      return self._peer_connect_dict__.pop(peer_id)
 
-      return None
+    return None
 
   def add_new_peer(self, peer_id, peer_dict):
     """
