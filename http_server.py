@@ -37,7 +37,7 @@ class Peers(Resource):
 
   def get(self):
     current_bc = app.config.get('chain_instance')
-    return {'status': 'OK', 'data': current_bc.peer_connect_dict}, 200
+    return {'status': 'OK', 'data': current_bc.get_peer_dict()}, 200
 
 
 class Data(Resource):

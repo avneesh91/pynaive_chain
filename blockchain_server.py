@@ -83,6 +83,9 @@ class BlockChain(object):
 
     return None
 
+  def get_peer_dict(self):
+    return self.__peer_connect_dict__
+
   def add_new_peer(self, peer_id, peer_dict):
     """
         Add a new peer to this peer

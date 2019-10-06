@@ -164,7 +164,10 @@ class CommandProcessor(object):
     peers = self.chain_instance.get_peer_id_list()
     total_count = len(peers)
 
-    result_list = self.write_to_peers(peers.keys(), json.dumps(data))
+    if total_count < 1:
+      return True
+
+    result_list = self.write_to_peers(peers, json.dumps(data))
     if not result_list.count('ACK') > total_count / 2:
       # motion not carried
       return False
