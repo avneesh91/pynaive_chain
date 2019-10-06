@@ -1,5 +1,6 @@
 from block_data import Block
 
+
 def get_logger(actor):
 
   def output_log(message):
