@@ -1,4 +1,4 @@
-# PyNaive Chain
+# PyNaive Chain [![Build Status](https://travis-ci.org/avneesh91/pynaive_chain.svg?branch=master)](https://travis-ci.org/avneesh91/pynaive_chain)
 This is the source code for a toy block chain introduced <a href="https://technokeeda.com/programming/python-blockchain-implementation-toy/" target="_blank">here</a>
 
 PyNaiveChain is a toy blockchain implemented completly in python. It has the following features as of now
@@ -14,7 +14,7 @@ What it doesn't have at the moment:
    - Block Data persistence
    - Chain reparing
 
-Note: This only supports python 3.6.
+Note: This only supports python 3, it is not compatible with Python 2.
 
 ## Usage and quickstart
 
