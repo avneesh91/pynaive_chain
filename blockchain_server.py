@@ -1,3 +1,4 @@
+import sys
 import uuid
 import json
 import datetime
@@ -203,3 +204,6 @@ class BlockChain(object):
         """
     #derp!!!
     return data
+
+  def shutdown(self):
+      sys.exit()
