@@ -118,7 +118,7 @@ You can add as many nodes as like this desired.
 ### HTTP Endpoints
 All the nodes expose all their functionality throught HTTP endpoints
 
-Name | End Point| Methof | Description |
+Name | End Point| Method | Description |
 | ------ | ------ | ------ |------ |
 Add Data | /data | POST | Add new data to the blockchain |
 Get Data | /data | GET | Get all the data currently residing in the blockchain |
