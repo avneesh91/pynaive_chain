@@ -22,11 +22,13 @@ class Block(object):
     # hash of the previous time stamp
     self.previous_hash = previous_hash
 
-    # takes data in string
-    self.data = json.dumps(data)
+    if not kwargs.get('direct_upload', False):
 
-    # hash of the block
-    self.curr_hash = self.__get_current_hash__()
+      # takes data in string
+      self.data = json.dumps(data)
+
+      # hash of the block
+      self.curr_hash = self.__get_current_hash__()
 
   def serialize(self, json_dump=False):
     """

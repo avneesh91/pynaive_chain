@@ -144,6 +144,9 @@ class BlockChain(object):
     last_block = Block(latest_block.index + 1, latest_block.curr_hash, data)
     return last_block
 
+  def insert_uploaded_block(self, block):
+    self.add_block_data(block)
+
   def add_block(self, data):
     latest_block = self.__block_data__[-1]
     last_block = Block(latest_block.index + 1, latest_block.curr_hash, data)

@@ -3,7 +3,7 @@ import asyncio
 import websockets
 import websocket as websocket_client
 
-from utils import get_logger
+from utils import get_logger, get_block
 from block_data import Block
 
 protocol_logger = get_logger('PROTOCOL_PROCESSOR')
@@ -107,8 +107,10 @@ class CommandProcessor(object):
                         json.dumps(intro_dict))
 
     for block in data_list:
-      block['data'] = json.loads(block.get('data'))
-      self.chain_instance.add_block(Block(**block))
+      protocol_logger(block.get('data'))
+      block['data'] = block.get('data')
+      protocol_logger("upload data recieved {}".format(block))
+      self.chain_instance.insert_uploaded_block(get_block(**block))
 
   def data_upload(self, new_peer):
     peer_list = []
