@@ -55,7 +55,7 @@ class Data(Resource):
 
   def get(self):
     current_bc = app.config.get('chain_instance')
-    all_data = [i.serialize() for i in current_bc.block_data]
+    all_data = [i.serialize() for i in current_bc.get_block_data()]
     return {'status': 'OK', 'data': all_data}, 200
 
 
