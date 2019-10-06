@@ -1,7 +1,8 @@
+test: format-code unit-tests integration-tests
+pipeline: unit-tests integration-tests
+
 format-code: 
 	yapf . -r -i
-
-test: unit-tests integration-tests
 
 unit-tests:
 	pytest unit_tests/ --verbose
