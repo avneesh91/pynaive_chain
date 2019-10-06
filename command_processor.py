@@ -107,7 +107,6 @@ class CommandProcessor(object):
                         json.dumps(intro_dict))
 
     for block in data_list:
-      protocol_logger(block.get('data'))
       block['data'] = block.get('data')
       protocol_logger("upload data recieved {}".format(block))
       self.chain_instance.insert_uploaded_block(get_block(**block))
