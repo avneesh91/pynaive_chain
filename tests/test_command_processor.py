@@ -33,6 +33,8 @@ class TestCommandProcessor(unittest.TestCase):
       }
   }
 
+  ADD_BLOCK_COMMAND = {'CMD': 'ADD_BLOCK', 'data': 'TEST_DATA'}
+
   UPLOAD_DICT = {
       "CMD":
           "NEW_JOIN_DATA_UPLOAD",
@@ -205,3 +207,30 @@ class TestCommandProcessor(unittest.TestCase):
 
     self.mock_chain_instance.validate_block.assert_called_once_with(
         {'data': 'Test Data'})
+
+  def test__given_command_processor__when_command_processor_invoked_with_invalidate_block_comand__then_return_kca(
+      self):
+
+    command_processor = CommandProcessor(self.mock_chain_instance)
+    self.mock_chain_instance.validate_block.return_value = False
+
+    actual_output = command_processor.command_processor(
+        TestCommandProcessor.VALIDATE_COMMAND_BLOCK)
+    expected_output = 'KCA'
+
+    self.assertEqual(expected_output, actual_output)
+
+    self.mock_chain_instance.validate_block.assert_called_once_with(
+        {'data': 'Test Data'})
+
+  def test__given_command_processor__when_command_processor_invoked_with_add_block_comand__then_add_block(
+      self):
+
+    command_processor = CommandProcessor(self.mock_chain_instance)
+
+    actual_output = command_processor.command_processor(
+        TestCommandProcessor.ADD_BLOCK_COMMAND)
+    expected_output = 'ACK'
+
+    self.assertEqual(expected_output, actual_output)
+    self.mock_chain_instance.add_block.assert_called_once_with('TEST_DATA')
