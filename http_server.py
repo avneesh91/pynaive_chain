@@ -68,7 +68,7 @@ class Node(Resource):
     current_bc = app.config.get('chain_instance')
     node_info = {}
     node_info['peer_id'] = current_bc.peer_id
-    node_info['data_count'] = len(current_bc.block_data)
+    node_info['data_count'] = len(current_bc.get_block_data())
     node_info['health'] = current_bc.validate_blockchain()
     node_info['rpc_port'] = current_bc.websocket_port
     node_info['age'] = str(current_bc.age)
