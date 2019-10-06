@@ -79,7 +79,7 @@ class BlockChain(object):
 
   def remove_peer(self, peer_id):
     if peer_id in self.__peer_connect_dict__.keys():
-      return self._peer_connect_dict__.pop(peer_id)
+      return self.__peer_connect_dict__.pop(peer_id)
 
     return None
 
@@ -152,6 +152,10 @@ class BlockChain(object):
 
   def validate_block(self, block_data):
     block_data['data'] = json.loads(block_data.get('data'))
+
+    if len(self.__block_data__) == 0:
+      return True
+
     latest_block = self.__block_data__[-1]
     compiled_block_data = Block(latest_block.index + 1, latest_block.curr_hash,
                                 block_data.get('data'))
