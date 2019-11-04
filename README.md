@@ -120,7 +120,7 @@ All the nodes expose all their functionality throught HTTP endpoints
 
 Name | End Point| Method | Description |
 | ------ | ------ | ------ |------ |
-Add Data | /data | POST | Add new data to the blockchain |
+Add Data | /data | POST | Add new data to the blockchain(TODO: Change this to PUT) |
 Get Data | /data | GET | Get all the data currently residing in the blockchain |
 Node Info| /node | GET | Get all information against a node |
 Get Peers| /peers | GET | Get all the peers of a node |
